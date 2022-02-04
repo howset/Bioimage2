@@ -93,7 +93,8 @@ for n in range(len(imgs)):
     ax[3].plot(histmm)
 
 #https://scikit-image.org/docs/dev/user_guide/tutorial_segmentation.html
-#https://scikit-image.org/docs/dev/auto_examples/edges/plot_canny.html    
+#https://scikit-image.org/docs/dev/auto_examples/edges/plot_canny.html   
+#https://towardsdatascience.com/canny-edge-detection-step-by-step-in-python-computer-vision-b49c3a2d8123 
 from skimage import feature
 #from scipy import ndimage as ndi
 for n in range(len(imgs)):
