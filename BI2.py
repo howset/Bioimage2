@@ -35,24 +35,36 @@ def load_imgs(path):
         #show()
     return(df_img)
 
-def mask_tr1(image_arr):
-    mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
-    rr, cc = draw.disk((500, 500), 460)
-    mask[rr, cc] = False
-    image_arr[mask] = 0
-    return(plt.imshow(image_arr))
-
-def mask_tr2(image_arr):
-    mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
-    rr, cc = draw.ellipse(455,168,80,180,rotation=np.deg2rad(45))
-    mask[rr, cc] = False
-    rr1, cc1 = draw.disk((500, 500), 420)
-    mask[rr1,cc1] =False
-    image_arr[mask] = 0
-    return(plt.imshow(image_arr))
-
-
-
+def mask_set(image_arr,set=''):
+    if set == 'tr1':
+        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+        rr, cc = draw.disk((500, 500), 460)
+        mask[rr, cc] = False
+        image_arr[mask] = 0
+        return(plt.imshow(image_arr))
+    elif set == 'tr2':
+        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+        #rr, cc = draw.polygon((560,328,766),(25,117,178))
+        rr, cc = draw.ellipse(455,168,80,180,rotation=np.deg2rad(45)) # better than polygon
+        mask[rr, cc] = False
+        rr1, cc1 = draw.disk((500, 500), 420)
+        mask[rr1,cc1] =False
+        image_arr[mask] = 0
+        return(plt.imshow(image_arr))
+    elif set == 'ch1':
+        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+        rr, cc = draw.disk((510, 505), 465)
+        mask[rr, cc] = False
+        image_arr[mask] = 0
+        return(plt.imshow(image_arr))
+    elif set == 'ch2':
+        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+        rr, cc = draw.disk((505, 500), 470)
+        mask[rr, cc] = False
+        image_arr[mask] = 0
+        return(plt.imshow(image_arr))
+    else:
+        print('Specify set (tr1, tr2, ch1, or ch2).')
 
 ##############################
 ## Procedure #################
@@ -60,24 +72,28 @@ def mask_tr2(image_arr):
 
 path = ('/home/howset/workspace/Bioimage2/Images/training_BF-C2DL-HSC/02/subset/*.tif') # E14 path
 path = ('/home/howset/workspace/Bioimage2/Images/challenge_BF-C2DL-HSC/01/subset/*.tif')
+
 path = ('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/01/subset/*.tif')
 path = ('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/01/subset2/*.tif') #like above but more
 path = ('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/02/subset/*.tif')
+path = ('/home/howsetya/workspace/Bioimage2/Images/challenge_BF-C2DL-HSC/01/subset/*.tif')
+path = ('/home/howsetya/workspace/Bioimage2/Images/challenge_BF-C2DL-HSC/02/subset/*.tif')
 
 imgs = load_imgs(path)
 
 #masking
-for n in range(len(imgs)):
+for n in range(1,len(imgs),30):
     image_arr = imgs.iloc[n,1]
-    mask_tr2(image_arr)
+    mask_set(image_arr,'ch1')
+    show()
 
 # check
 for n in range(1, len(imgs),5):
-    print(n)
-    a=imshow(imgs.iloc[n,1])
-    show()
+    #print(n)
+    #a = imgs.iloc[n,1]
+    #show()
     #image_arr = imgs.iloc[n,1]
-    #mask_tr2(image_arr)
+    mask_set(image_arr)
     #show()
     
 
@@ -220,41 +236,36 @@ count_colonies(image)
 
 #################################################
 #masking
-import skimage.io
-import skimage.draw
-import numpy as np
-import matplotlib.pyplot as plt
+# def mask_tr1(image_arr):
+#     mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+#     rr, cc = draw.disk((500, 500), 460)
+#     mask[rr, cc] = False
+#     image_arr[mask] = 0
+#     return(plt.imshow(image_arr))
 
+# def mask_tr2(image_arr):
+#     mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+#     #rr, cc = draw.polygon((560,328,766),(25,117,178))
+#     rr, cc = draw.ellipse(455,168,80,180,rotation=np.deg2rad(45)) # better than polygon
+#     mask[rr, cc] = False
+#     rr1, cc1 = draw.disk((500, 500), 420)
+#     mask[rr1,cc1] =False
+#     image_arr[mask] = 0
+#     return(plt.imshow(image_arr))
 
-#bacteria_image = skimage.io.imread("00-colonies01.jpg")
-#bacteria_image  = skimage.io.imread('/home/howsetya/workspace/Bioimage2/00-colonies01.jpg')
-#bacteria_image  = skimage.io.imread('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/01/subset/t1763.tif')
+# def mask_ch1(image_arr):
+#     mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+#     rr, cc = draw.disk((510, 505), 465)
+#     mask[rr, cc] = False
+#     image_arr[mask] = 0
+#     return(plt.imshow(image_arr))
 
-image=imgs.iloc[3,1]
-ori = image
-# Create the basic mask
-mask = np.ones(shape=image.shape[0:2], dtype="bool")
-
-
-rr, cc = skimage.draw.disk((500, 500), 470) #include well border
-rr, cc = skimage.draw.disk((500, 500), 440)
-mask[rr, cc] = False
-
-# Display mask image
-#fig, ax = plt.subplots()
-#plt.imshow(mask, cmap='gray')
-#plt.show()
-
-
-image[mask] = 0
-#fig, ax = plt.subplots()
-#plt.imshow(image)
-#plt.show()
-
-fig, ax = plt.subplots(1, 2, figsize=(8, 3), sharey=True)
-#ax[0].imshow(imgs.iloc[1,1])
-ax[0].imshow(mask)
-ax[1].imshow(image)
+# def mask_ch2(image_arr):
+#     mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+#     rr, cc = draw.disk((505, 500), 470)
+#     mask[rr, cc] = False
+#     image_arr[mask] = 0
+#     return(plt.imshow(image_arr))
 #################################################
 #################################################
 for n in range(len(imgs)):
