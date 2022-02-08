@@ -14,9 +14,9 @@ import glob, re
 import pandas as pd
 import matplotlib.pyplot as plt
 from skimage.io import imread,imsave,imshow,show
-from skimage import exposure
-from skimage.filters import threshold_triangle as tri
-from skimage.filters import threshold_yen as yen
+from skimage import exposure,draw
+#from skimage.filters import threshold_triangle as tri
+#from skimage.filters import threshold_yen as yen
 import numpy as np
 
 ##############################
@@ -35,6 +35,24 @@ def load_imgs(path):
         #show()
     return(df_img)
 
+def mask_tr1(image_arr):
+    mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+    rr, cc = draw.disk((500, 500), 460)
+    mask[rr, cc] = False
+    image_arr[mask] = 0
+    return(plt.imshow(image_arr))
+
+def mask_tr2(image_arr):
+    mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
+    rr, cc = draw.ellipse(455,168,80,180,rotation=np.deg2rad(45))
+    mask[rr, cc] = False
+    rr1, cc1 = draw.disk((500, 500), 420)
+    mask[rr1,cc1] =False
+    image_arr[mask] = 0
+    return(plt.imshow(image_arr))
+
+
+
 
 ##############################
 ## Procedure #################
@@ -43,15 +61,32 @@ def load_imgs(path):
 path = ('/home/howset/workspace/Bioimage2/Images/training_BF-C2DL-HSC/02/subset/*.tif') # E14 path
 path = ('/home/howset/workspace/Bioimage2/Images/challenge_BF-C2DL-HSC/01/subset/*.tif')
 path = ('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/01/subset/*.tif')
+path = ('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/01/subset2/*.tif') #like above but more
+path = ('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/02/subset/*.tif')
+
 imgs = load_imgs(path)
 
+#masking
+for n in range(len(imgs)):
+    image_arr = imgs.iloc[n,1]
+    mask_tr2(image_arr)
+
+# check
+for n in range(1, len(imgs),5):
+    print(n)
+    a=imshow(imgs.iloc[n,1])
+    show()
+    #image_arr = imgs.iloc[n,1]
+    #mask_tr2(image_arr)
+    #show()
+    
 
 ##############################
 ## tests #####################
 ##############################
 imgs.iloc[0]
-imgs.iloc[0,1]
-imshow(imgs.iloc[0,1])
+image=imgs.iloc[21,1]
+imshow(image)
 len(imgs)
 
 #################################################
@@ -93,6 +128,35 @@ ax.axis('off')
 # region based segmentation
 # sobel gradient
 from skimage.filters import sobel
+
+for n in range(len(imgs)):
+    image = imgs.iloc[n,1]
+    hist, hist_centers = exposure.histogram(image)
+    title = imgs.iloc[n,0]
+    print(title)
+    # Compute the Canny filter for two values of sigma
+    edges1 = feature.canny(image,sigma=1.6)
+    #imsave(edges1)
+    hist1, hist_centers1 = exposure.histogram(edges1)
+    # Sobel gradient
+    elmap = sobel(image)
+    hist2, hist_centers2 = exposure.histogram(elmap)
+    # display results
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10, 10))
+    ax=ax.flatten()
+    #ax[0].imshow(image, cmap='gray')
+    #ax[0].set_title('original', fontsize=20)
+    ax[0].imshow(edges1, cmap='gray')
+    ax[0].set_title(r'Canny, $\sigma=1.6$', fontsize=20)
+    ax[1].imshow(elmap,cmap='gray')
+    ax[1].set_title('Sobel grad', fontsize=20)
+    #ax[3].plot(hist)
+    ax[2].plot(hist1)
+    ax[3].plot(hist2)
+    #for a in ax:
+    #    a.axis('off')
+    fig.tight_layout()
+    plt.show()
 
 elevation_map = sobel(image)
 plt.imshow(elevation_map, cmap='gray')
@@ -164,33 +228,33 @@ import matplotlib.pyplot as plt
 
 #bacteria_image = skimage.io.imread("00-colonies01.jpg")
 #bacteria_image  = skimage.io.imread('/home/howsetya/workspace/Bioimage2/00-colonies01.jpg')
-bacteria_image  = skimage.io.imread('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/01/subset/t1763.tif')
+#bacteria_image  = skimage.io.imread('/home/howsetya/workspace/Bioimage2/Images/training_BF-C2DL-HSC/01/subset/t1763.tif')
 
-# bacteria_image = image
-# display the image
-fig, ax = plt.subplots()
-plt.imshow(bacteria_image)
-plt.show()
-
+image=imgs.iloc[3,1]
+ori = image
 # Create the basic mask
-mask = np.ones(shape=bacteria_image.shape[0:2], dtype="bool")
+mask = np.ones(shape=image.shape[0:2], dtype="bool")
 
 
-rr, cc = skimage.draw.circle_perimeter(500, 500, 450)
+rr, cc = skimage.draw.disk((500, 500), 470) #include well border
+rr, cc = skimage.draw.disk((500, 500), 440)
 mask[rr, cc] = False
 
 # Display mask image
-fig, ax = plt.subplots()
-plt.imshow(mask, cmap='gray')
-plt.show()
+#fig, ax = plt.subplots()
+#plt.imshow(mask, cmap='gray')
+#plt.show()
 
 
-bacteria_image[mask] = 0
-fig, ax = plt.subplots()
-plt.imshow(bacteria_image)
-plt.show()
+image[mask] = 0
+#fig, ax = plt.subplots()
+#plt.imshow(image)
+#plt.show()
 
-
+fig, ax = plt.subplots(1, 2, figsize=(8, 3), sharey=True)
+#ax[0].imshow(imgs.iloc[1,1])
+ax[0].imshow(mask)
+ax[1].imshow(image)
 #################################################
 #################################################
 for n in range(len(imgs)):
