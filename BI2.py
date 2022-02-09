@@ -10,14 +10,15 @@ Created on Fri Jan 28 13:53:58 2022
 ## Import packages ###########
 ##############################
 
-import glob, re
+import glob, re, os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+
 from skimage.io import imread,imsave,imshow,show
 from skimage import exposure,draw
 #from skimage.filters import threshold_triangle as tri
 #from skimage.filters import threshold_yen as yen
-import numpy as np
 
 ##############################
 ## Functions #################
@@ -36,36 +37,27 @@ def load_imgs(path):
     return(df_img)
 
 def mask_set(image_arr,set=''):
+    mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
     if set == 'tr1':
-        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
         rr, cc = draw.disk((500, 500), 460)
         mask[rr, cc] = False
-        image_arr[mask] = 0
-        return(plt.imshow(image_arr))
     elif set == 'tr2':
-        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
         #rr, cc = draw.polygon((560,328,766),(25,117,178))
         rr, cc = draw.ellipse(455,168,80,180,rotation=np.deg2rad(45)) # better than polygon
         mask[rr, cc] = False
         rr1, cc1 = draw.disk((500, 500), 420)
         mask[rr1,cc1] =False
-        image_arr[mask] = 0
-        return(plt.imshow(image_arr))
     elif set == 'ch1':
-        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
         rr, cc = draw.disk((510, 505), 465)
         mask[rr, cc] = False
-        image_arr[mask] = 0
-        return(plt.imshow(image_arr))
     elif set == 'ch2':
-        mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
         rr, cc = draw.disk((505, 500), 470)
         mask[rr, cc] = False
-        image_arr[mask] = 0
-        return(plt.imshow(image_arr))
     else:
         print('Specify set (tr1, tr2, ch1, or ch2).')
-
+    image_arr[mask] = 0
+    return(plt.imshow(image_arr,cmap='gray'))
+    
 ##############################
 ## Procedure #################
 ##############################
