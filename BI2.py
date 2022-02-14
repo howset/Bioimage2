@@ -37,26 +37,27 @@ def load_imgs(path):
     return(df_img)
 
 def mask_set(image_arr,set=''):
+    image_arr_copy = image_arr
     mask = np.ones(shape=image_arr.shape[0:2], dtype="bool")
-    if set == 'tr1':
-        rr, cc = draw.disk((500, 500), 460)
+    if set == 'tr1': #for training 1 dataset
+        rr, cc = draw.disk((500, 500), 448)
         mask[rr, cc] = False
-    elif set == 'tr2':
+    elif set == 'tr2': #for training 2 dataset
         #rr, cc = draw.polygon((560,328,766),(25,117,178))
         rr, cc = draw.ellipse(455,168,80,180,rotation=np.deg2rad(45)) # better than polygon
         mask[rr, cc] = False
         rr1, cc1 = draw.disk((500, 500), 420)
         mask[rr1,cc1] =False
-    elif set == 'ch1':
-        rr, cc = draw.disk((510, 505), 465)
+    elif set == 'ch1': #for challenge 1 dataset
+        rr, cc = draw.disk((510, 510), 460)
         mask[rr, cc] = False
-    elif set == 'ch2':
+    elif set == 'ch2': #for challenge 2 dataset
         rr, cc = draw.disk((505, 500), 470)
         mask[rr, cc] = False
     else:
         print('Specify set (tr1, tr2, ch1, or ch2).')
-    image_arr[mask] = 0
-    return(plt.imshow(image_arr,cmap='gray'))
+    image_arr_copy[mask] = 1
+    return(image_arr_copy)
     
 ##############################
 ## Procedure #################
@@ -74,9 +75,11 @@ path = ('/home/howsetya/workspace/Bioimage2/Images/challenge_BF-C2DL-HSC/02/subs
 imgs = load_imgs(path)
 
 #masking
-for n in range(1,len(imgs),30):
+for n in range(1,len(imgs),80):
     image_arr = imgs.iloc[n,1]
     mask_set(image_arr,'ch1')
+    plt.figure(figsize = (8,8))
+    plt.imshow(image_arr,cmap='gray')
     show()
 
 # check
@@ -336,3 +339,11 @@ labeled_image, count = skimage.measure.label(mask, return_num=True)
 print(count)
 
 blurred_image = skimage.filters.gaussian(image, sigma=1.0)
+
+####################################################
+#Load just one image from each directory.
+tr1_ss = imread('./Images/training_BF-C2DL-HSC/01/subset/t1760.tif')
+tr2_ss = imread('./Images/training_BF-C2DL-HSC/02/subset/t1760.tif')
+ch1_ss = imread('./Images/challenge_BF-C2DL-HSC/01/subset/t1760.tif')
+ch2_ss = imread('./Images/challenge_BF-C2DL-HSC/02/subset/t1760.tif')
+
