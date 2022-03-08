@@ -41,7 +41,7 @@ def load_imgs(path):
     files_img.sort()
     df_img = pd.DataFrame(columns=['FileName','Image'])
     for file in files_img:
-        print(f'Loading {file}') # to show progress
+        print(f'Loading {file}') 
         filename = re.sub(".*/", "", file[:-4])
         img = imread(file,plugin='tifffile') # tifffile plugin for loading compressed tiffs requires imagecodecs
         df_img.loc[len(df_img)] = [filename,img]
@@ -53,21 +53,19 @@ def mask_set(image_arr,set=''):
         mask = np.ones(shape=image_arr.shape[1:3],dtype="bool")
     else:
         mask = np.ones(shape=image_arr.shape,dtype="bool")
-    if set == 'tr1': #for training 1 dataset
-        #rr, cc = draw.rectangle(start=(250, 400), extent=(300, 200))
-        #mask[rr, cc] = True
+    if set == 'tr1': 
         rr, cc = draw.disk((514, 458), 401) #((y,x),rad)
         mask[rr, cc] = False
-    elif set == 'tr2': #for training 2 dataset
+    elif set == 'tr2': 
         #rr, cc = draw.polygon((560,328,766),(25,117,178))
         rr, cc = draw.ellipse(455,175,80,170,rotation=np.deg2rad(45)) #better than polygon
         mask[rr, cc] = False
         rr1, cc1 = draw.disk((512, 488), 405)
         mask[rr1,cc1] =False
-    elif set == 'ch1': #for challenge 1 dataset
+    elif set == 'ch1': 
         rr, cc = draw.disk((520, 505), 450)
         mask[rr, cc] = False
-    elif set == 'ch2': #for challenge 2 dataset
+    elif set == 'ch2': 
         rr, cc = draw.disk((515, 515), 451)
         mask[rr, cc] = False
     else:
@@ -135,8 +133,6 @@ def cell_count(path='', ser='',plot_all=''):
     fig,ax = plt.subplots(figsize=(12,12))
     ax.plot(x,y)
     ax.plot(x, y_x, 'r-', label='fit, k = %.2f a = %.2f' %(popt[1],popt[0]))
-    #ax.set_xticks(img_df['FileName'][::5])
-    #ax.set_xticklabels(img_df['FileName'][::5], rotation=60)
     ax.set_title(f'Series={ser}, k={k}')
     ax.set(xlabel='Image', ylabel='Cell Count')
     return fig
