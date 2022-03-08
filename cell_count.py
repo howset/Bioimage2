@@ -49,7 +49,10 @@ def load_imgs(path):
 
 def mask_set(image_arr,set=''):
     image_arr_copy = np.squeeze(image_arr) #not sure why squeeze is necessary
-    mask = np.ones(shape=image_arr.shape[1:3], dtype="bool")
+    if len(image_arr.shape)>2:
+        mask = np.ones(shape=image_arr.shape[1:3],dtype="bool")
+    else:
+        mask = np.ones(shape=image_arr.shape,dtype="bool")
     if set == 'tr1': #for training 1 dataset
         #rr, cc = draw.rectangle(start=(250, 400), extent=(300, 200))
         #mask[rr, cc] = True
@@ -92,8 +95,8 @@ def water_shed(masked_img):
     labeled = watershed(-distance, markers, mask=dilated, compactness=0)
     return labeled, c_count
 
-def expon (x,a,k):
-        form = a*np.exp(k*x)
+def expon (x,a,k,c):
+        form = a*np.exp(-k*x)+c
         return form
 
 def cell_count(path='', ser='',plot_all=''):
@@ -125,16 +128,16 @@ def cell_count(path='', ser='',plot_all=''):
     y = img_df['CellCount']
     y = np.array(y)
     y = y.astype(int)
-    popt, pcov = curve_fit(expon, x, y, p0=(4, 0.1))
+    popt, pcov = curve_fit(expon, x, y, p0=(1, -1e-6, 1))
     k=popt[1] # Get growth constant
-    y_x = expon(x,popt[0],popt[1])
+    y_x = expon(x,*popt)
     
     fig,ax = plt.subplots(figsize=(12,12))
-    ax.plot(x,img_df['CellCount'])
+    ax.plot(x,y)
     ax.plot(x, y_x, 'r-', label='fit, k = %.2f a = %.2f' %(popt[1],popt[0]))
-    ax.set_xticks(img_df['FileName'][::5])
-    ax.set_xticklabels(img_df['FileName'][::5], rotation=60)
-    ax.set_title(f'{ser} - k={k}')
+    #ax.set_xticks(img_df['FileName'][::5])
+    #ax.set_xticklabels(img_df['FileName'][::5], rotation=60)
+    ax.set_title(f'Series={ser}, k={k}')
     ax.set(xlabel='Image', ylabel='Cell Count')
     return fig
 
