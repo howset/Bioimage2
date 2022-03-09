@@ -30,10 +30,10 @@ from scipy.optimize import curve_fit
 ##############################
 def usage():
     print('')
-    print('Usage: python3 cell_count.py Req1 Req2 Opt3')
+    print('Usage: python3 cell_count.py Req1 Req2')
     print('Req1: path to images')
     print('Req2: image set (tr1, tr2, ch1, or ch2)')
-    print('Opt3: plot individual image (non functional)')
+    #print('Opt3: plot individual image (non functional)')
     print('')
 
 def load_imgs(path):
