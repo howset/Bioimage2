@@ -1,6 +1,6 @@
 # Created by pipreqs.
 # Remove all other scripts first before running pipreqs.
-# Install these libraries with pip install -r requirements.txt
+# Install these libraries with pip install -r requirements.txt.
 
 matplotlib==3.5.1
 numpy==1.22.3
