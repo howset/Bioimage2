@@ -1,5 +1,7 @@
 # ignore images
 **/Images
 
-# ignore CTC
-**/CTC
+# ignore obsolete
+**/Obsolete
+
+
