@@ -13,6 +13,9 @@ Created on Fri Feb 18 11:31:53 2022
 import sys, glob, re
 import pandas as pd
 import numpy as np
+
+import matplotlib
+matplotlib.use('Agg') #To bypass Tkinter GUI
 import matplotlib.pyplot as plt
 
 from skimage.io import imread
