@@ -3,7 +3,7 @@
 # Install these libraries with pip install -r requirements.txt.
 
 matplotlib==3.5.1
-numpy==1.22.3
-pandas==1.4.1
+numpy==1.21.2 #1.22.3
+pandas==1.4.1 
 scipy==1.8.0
-skimage==0.0
+skimage==0.18.3
