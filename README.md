@@ -9,4 +9,4 @@ Content:
 - BI2_4.ipynb: Journal of the project.
 - cell_count.py: Script to run.
 - requirements.txt: List of libraries used (for convenience).
-- run.sh: bash script to run the pyhton script iteratively.
+- run.sh: bash script to run the python script iteratively.
