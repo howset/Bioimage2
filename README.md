@@ -4,7 +4,7 @@ Data is obtained from CTC, see info.txt.
 
 Content:
 - /PaperInfoEtc: Miscellaneous info/files.
-- /Images: Small subset of the complete image set.
+- /Images: Small subset of the complete image set. Temporarily stored.
 - /FromServer: Results from complete image set.
 - BI2_4.ipynb: Journal of the project.
 - cell_count.py: Script to run.
